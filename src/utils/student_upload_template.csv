@@ -1,0 +1,11 @@
+countyNumber,sponsorLEANumber,siteSchoolNumber,firstName,middleName,lastName,dateOfBirth,gender,raceEthnicity,studentId,lastFourSSN,caseNumber,addressLine1,addressLine2,city,state,zipCode,enrollmentStartDate,programs
+001,1001,001,John,A,Smith,2010-05-15,M,WH,STU-2023-001,1234,CASE-2023-001,123 Main Street,Apt 4B,Anytown,CA,12345,2023-08-20,"Free Lunch Program,Special Education Services"
+001,1001,002,Maria,L,Garcia,2011-03-22,F,HI,STU-2023-002,5678,,456 Oak Avenue,,Anytown,CA,12345,2023-08-15,"English Language Learner (ELL)"
+002,1002,001,Robert,J,Johnson,2010-11-30,M,BL,STU-2023-003,9012,CASE-2023-002,789 Pine Road,,Otherville,CA,54321,2023-08-25,"Free Lunch Program,Title I Services"
+001,1001,002,Sarah,M,Williams,2011-07-14,F,AS,STU-2023-004,3456,,321 Elm Street,Unit 12,Anytown,CA,12345,2023-08-18,"Gifted and Talented"
+003,1003,003,David,K,Brown,2010-09-05,M,TM,STU-2023-005,7890,CASE-2023-003,654 Maple Lane,,Somewhere,CA,67890,2023-08-22,"Reduced Price Lunch,Special Education Services"
+001,1001,001,Michael,,Taylor,2010-12-25,M,WH,STU-2023-006,2345,,555 Cedar Court,,Anytown,CA,12345,2023-08-28,"Free Lunch Program"
+002,1002,002,Jennifer,R,Davis,2011-04-30,F,BL,STU-2023-007,6789,,888 Birch Lane,Apt 2A,Otherville,CA,54321,2023-08-30,"English Language Learner (ELL),Title I Services"
+001,1001,003,Christopher,L,Miller,2010-08-12,M,HI,STU-2023-008,0123,CASE-2023-004,777 Walnut Street,,Anytown,CA,12345,2023-09-01,"Special Education Services"
+003,1003,001,Amanda,S,Wilson,2011-01-18,F,AS,STU-2023-009,4567,,999 Spruce Avenue,Suite 5,Somewhere,CA,67890,2023-09-05,"Gifted and Talented,Title I Services"
+002,1002,003,Daniel,,Moore,2010-07-22,M,WH,STU-2023-010,8901,CASE-2023-005,222 Poplar Drive,,Otherville,CA,54321,2023-09-10,"Free Lunch Program,Reduced Price Lunch"
