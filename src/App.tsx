@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { PrimeReactProvider } from 'primereact/api';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -26,6 +28,12 @@ function App() {
 
   // Mock authentication check
   React.useEffect(() => {
+    AOS.init({
+      offset: 200,
+      duration: 600,
+      easing: 'ease-in-sine',
+      delay: 100,
+    });
     // In POC, we'll simulate being authenticated after login
     const token = localStorage.getItem('demo_token');
     setIsAuthenticated(!!token);

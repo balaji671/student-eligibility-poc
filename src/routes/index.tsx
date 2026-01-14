@@ -10,13 +10,20 @@ import { DuplicateReview } from '../pages/DuplicateReview';
 import { EligibilityReview } from '../pages/EligibilityReview';
 import { Reports } from '../pages/Reports';
 import { Profile } from '../pages/Profile';
-import { Layout } from '../components/Layout/Layout';
+import PrivateLayout from '../components/Layout/Layout';
 
 interface AppRoutesProps {
     isAuthenticated: boolean;
     onLogin: () => void;
     onLogout: () => void;
 }
+
+const PublicRoute: React.FC<{
+    isAuthenticated: boolean;
+    children: React.ReactNode;
+}> = ({ isAuthenticated, children }) => {
+    return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+};
 
 export const AppRoutes: React.FC<AppRoutesProps> = ({
     isAuthenticated,
@@ -28,18 +35,12 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
             {/* Public Route */}
             <Route
                 path="/login"
-                element={
-                    isAuthenticated ? (
-                        <Navigate to="/dashboard" replace />
-                    ) : (
-                        <Login onLogin={onLogin} />
-                    )
-                }
+                element={<PublicRoute isAuthenticated={isAuthenticated}><Login onLogin={onLogin} /></PublicRoute>}
             />
 
             {/* Protected Routes */}
             {isAuthenticated ? (
-                <Route element={<Layout onLogout={onLogout} />}>
+                <Route element={<PrivateLayout onLogout={onLogout} />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/students" element={<StudentsList />} />
                     <Route path="/students/new" element={<StudentCreate />} />

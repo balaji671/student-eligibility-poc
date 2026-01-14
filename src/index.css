@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 :focus-visible {
   outline: 3px solid #2563eb;
   outline-offset: 2px;
