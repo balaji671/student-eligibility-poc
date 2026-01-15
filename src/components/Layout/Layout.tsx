@@ -104,7 +104,7 @@ const PrivateLayout: React.FC<PrivateLayoutProps> = ({ onLogout }) => {
                             <Menu size={20} />
                         </button>
                         <div className="bg-white rounded-lg px-4 py-2">
-                            <h1 className="text-lg font-bold text-gray-900">V-Board</h1>
+                            <h1 className="text-lg font-bold text-gray-900">LEA-Board</h1>
                         </div>
                     </div>
 
@@ -158,7 +158,7 @@ const PrivateLayout: React.FC<PrivateLayoutProps> = ({ onLogout }) => {
                 <div className="hidden xl:block w-[16%]"></div>
                 <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-lg transform transition-transform duration-300 ease-in-out xl:translate-x-0 xl:absolute xl:top-[3%] xl:bottom-[3%] xl:left-6 xl:inset-0 xl:w-[15%] xl:rounded-lg ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex flex-col h-full p-4 w-full">
-                        <h1 className="hidden xl:block text-center text-xl font-bold text-gray-900 tracking-wide my-8">V-Board</h1>
+                        <h1 className="hidden xl:block text-center text-xl font-bold text-gray-900 tracking-wide my-8">LEA-Board</h1>
 
                         <button
                             onClick={() => setSidebarOpen(false)}
