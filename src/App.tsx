@@ -33,6 +33,7 @@ function App() {
       duration: 600,
       easing: 'ease-in-sine',
       delay: 100,
+      startEvent: 'DOMContentLoaded',
     });
     // In POC, we'll simulate being authenticated after login
     const token = localStorage.getItem('demo_token');
