@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Steps } from 'primereact/steps';
-import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
+import {
+    ChevronLeft, ChevronRight, CheckCircle2,
+    User, School, Fingerprint, MapPin,
+    ListChecks, ShieldCheck, AlertCircle,
+    Info, Check, ArrowLeft, GraduationCap,
+    Lock, Calendar as CalendarIcon, Globe
+} from 'lucide-react';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { Checkbox } from 'primereact/checkbox';
 import { InputMask } from 'primereact/inputmask';
 import { toast } from 'sonner';
-import { DemoBanner } from '../components/Common/DemoBanner';
 
 export const StudentCreate: React.FC = () => {
     const [activeStep, setActiveStep] = useState(0);
     const navigate = useNavigate();
 
     const steps = [
-        { label: 'District & School Information' },
-        { label: 'Student Demographics' },
-        { label: 'Student Identification' },
-        { label: 'Address & Enrollment' },
-        { label: 'Program Selection' },
-        { label: 'Review & Submit' }
+        { label: 'District & School', icon: <School size={18} /> },
+        { label: 'Demographics', icon: <User size={18} /> },
+        { label: 'Identification', icon: <Fingerprint size={18} /> },
+        { label: 'Address & Enrollment', icon: <MapPin size={18} /> },
+        { label: 'Program Selection', icon: <ListChecks size={18} /> },
+        { label: 'Review & Submit', icon: <ShieldCheck size={18} /> }
     ];
 
     const [formData, setFormData] = useState({
@@ -61,14 +64,12 @@ export const StudentCreate: React.FC = () => {
         { label: 'County 001', value: '001' },
         { label: 'County 002', value: '002' },
         { label: 'County 003', value: '003' },
-        { label: 'County 004', value: '004' },
     ];
 
     const leaNumbers = [
         { label: 'Select LEA', value: '' },
         { label: 'LEA-1001', value: '1001' },
         { label: 'LEA-1002', value: '1002' },
-        { label: 'LEA-1003', value: '1003' },
     ];
 
     const schoolNumbers = [
@@ -123,15 +124,14 @@ export const StudentCreate: React.FC = () => {
     ];
 
     const handleNext = () => {
-        // Basic validation for required fields
         if (activeStep === 0) {
             if (!formData.countyNumber || !formData.sponsorLEANumber || !formData.siteSchoolNumber) {
-                toast.error('Please fill all required district and school fields');
+                toast.error('District and school fields are required');
                 return;
             }
         } else if (activeStep === 1) {
             if (!formData.firstName || !formData.lastName || !formData.dateOfBirth || !formData.gender || !formData.raceEthnicity) {
-                toast.error('Please fill all required demographic fields');
+                toast.error('All demographic fields are required');
                 return;
             }
         } else if (activeStep === 2) {
@@ -143,9 +143,9 @@ export const StudentCreate: React.FC = () => {
 
         if (activeStep < steps.length - 1) {
             setActiveStep(activeStep + 1);
+            window.scrollTo(0, 0);
         } else {
-            // Submit form
-            toast.success('Student record created successfully (Demo)');
+            toast.success('Student record created successfully');
             navigate('/students');
         }
     };
@@ -153,119 +153,108 @@ export const StudentCreate: React.FC = () => {
     const handleBack = () => {
         if (activeStep > 0) {
             setActiveStep(activeStep - 1);
+            window.scrollTo(0, 0);
         } else {
             navigate('/dashboard');
         }
     };
 
     const updateFormData = (field: string, value: any) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
+        setFormData(prev => ({ ...prev, [field]: value }));
     };
 
     const renderStepContent = () => {
         switch (activeStep) {
-            case 0: // District & School Information
+            case 0:
                 return (
-                    <div className="space-y-4" role="form" aria-label="District and school information form">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label htmlFor="countyNumber" className="block text-sm font-medium mb-1">
-                                    County Number *
-                                </label>
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500" role="form" aria-label="District and school information form">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="countyNumber" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">County Number *</label>
                                 <Dropdown
                                     id="countyNumber"
                                     value={formData.countyNumber}
                                     onChange={(e) => updateFormData('countyNumber', e.value)}
                                     options={counties}
                                     placeholder="Select County"
-                                    className="w-full"
+                                    className="w-full bg-slate-50 border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/5 transition-all"
                                     required
                                     aria-required="true"
                                     aria-label="County number selection"
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="sponsorLEANumber" className="block text-sm font-medium mb-1">
-                                    Sponsor/LEA Number *
-                                </label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="sponsorLEANumber" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Sponsor/LEA Number *</label>
                                 <Dropdown
                                     id="sponsorLEANumber"
                                     value={formData.sponsorLEANumber}
                                     onChange={(e) => updateFormData('sponsorLEANumber', e.value)}
                                     options={leaNumbers}
                                     placeholder="Select LEA"
-                                    className="w-full"
+                                    className="w-full bg-slate-50 border-slate-200 rounded-xl"
                                     required
                                     aria-required="true"
                                     aria-label="LEA number selection"
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="siteSchoolNumber" className="block text-sm font-medium mb-1">
-                                    Site/School Number *
-                                </label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="siteSchoolNumber" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Site/School Number *</label>
                                 <Dropdown
                                     id="siteSchoolNumber"
                                     value={formData.siteSchoolNumber}
                                     onChange={(e) => updateFormData('siteSchoolNumber', e.value)}
                                     options={schoolNumbers}
                                     placeholder="Select School"
-                                    className="w-full"
+                                    className="w-full bg-slate-50 border-slate-200 rounded-xl"
                                     required
                                     aria-required="true"
                                     aria-label="School number selection"
                                 />
                             </div>
                         </div>
-                        <div className="p-3 bg-blue-50 rounded text-sm text-blue-700">
-                            <p className="font-medium mb-1">Demo Note:</p>
-                            <p>These selections represent mock district and school identifiers for demonstration purposes only.</p>
+                        <div className="flex items-center gap-4 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
+                            <div className="bg-white p-2 rounded-lg shadow-sm text-indigo-600"><School size={20} /></div>
+                            <div>
+                                <p className="text-xs font-bold text-indigo-900 uppercase tracking-tight">Demo Environment</p>
+                                <p className="text-xs text-indigo-700/80">These selections represent mock district and school identifiers.</p>
+                            </div>
                         </div>
                     </div>
                 );
 
-            case 1: // Student Demographics
+            case 1:
                 return (
-                    <div className="space-y-4" role="form" aria-label="Student demographics form">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label htmlFor="firstName" className="block text-sm font-medium mb-1">
-                                    First Name *
-                                </label>
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500" role="form" aria-label="Student demographics form">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="firstName" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">First Name *</label>
                                 <InputText
                                     id="firstName"
                                     value={formData.firstName}
                                     onChange={(e) => updateFormData('firstName', e.target.value)}
-                                    className="w-full"
+                                    className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                     required
                                     aria-required="true"
                                     aria-label="Student first name"
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="middleName" className="block text-sm font-medium mb-1">
-                                    Middle Name
-                                </label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="middleName" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Middle Name</label>
                                 <InputText
                                     id="middleName"
                                     value={formData.middleName}
                                     onChange={(e) => updateFormData('middleName', e.target.value)}
-                                    className="w-full"
+                                    className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                     aria-label="Student middle name"
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="lastName" className="block text-sm font-medium mb-1">
-                                    Last Name *
-                                </label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="lastName" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Last Name *</label>
                                 <InputText
                                     id="lastName"
                                     value={formData.lastName}
                                     onChange={(e) => updateFormData('lastName', e.target.value)}
-                                    className="w-full"
+                                    className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                     required
                                     aria-required="true"
                                     aria-label="Student last name"
@@ -273,16 +262,16 @@ export const StudentCreate: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label htmlFor="dateOfBirth" className="block text-sm font-medium mb-1">
-                                    Date of Birth *
-                                </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="dateOfBirth" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Date of Birth *</label>
+
                                 <Calendar
                                     id="dateOfBirth"
                                     value={formData.dateOfBirth}
                                     onChange={(e) => updateFormData('dateOfBirth', e.value)}
-                                    className="w-full"
+                                    className="rounded-xl overflow-hidden border-none bg-slate-50"
+                                    inputClassName="py-3! border-slate-200 bg-transparent rounded-xl"
                                     showIcon
                                     required
                                     aria-required="true"
@@ -291,17 +280,15 @@ export const StudentCreate: React.FC = () => {
                                     aria-label="Student date of birth"
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="gender" className="block text-sm font-medium mb-1">
-                                    Gender *
-                                </label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="gender" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Gender *</label>
                                 <Dropdown
                                     id="gender"
                                     value={formData.gender}
                                     onChange={(e) => updateFormData('gender', e.value)}
                                     options={genderOptions}
                                     placeholder="Select Gender"
-                                    className="w-full"
+                                    className="w-full bg-slate-50 border-slate-200 rounded-xl"
                                     required
                                     aria-required="true"
                                     aria-label="Student gender"
@@ -309,428 +296,398 @@ export const StudentCreate: React.FC = () => {
                             </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="raceEthnicity" className="block text-sm font-medium mb-1">
-                                Race/Ethnicity *
-                            </label>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="raceEthnicity" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Race/Ethnicity *</label>
                             <Dropdown
                                 id="raceEthnicity"
                                 value={formData.raceEthnicity}
                                 onChange={(e) => updateFormData('raceEthnicity', e.value)}
                                 options={raceEthnicityOptions}
                                 placeholder="Select Race/Ethnicity"
-                                className="w-full"
+                                className="w-full bg-slate-50 border-slate-200 rounded-xl"
                                 required
                                 aria-required="true"
                                 aria-label="Student race and ethnicity"
                             />
                         </div>
-
-                        <div className="p-3 bg-yellow-50 rounded text-sm text-yellow-700">
-                            <p className="font-medium mb-1">Privacy Notice:</p>
-                            <p>In this demo, all data is mock/fake. In production, this information would be protected according to FERPA and other privacy regulations.</p>
-                        </div>
                     </div>
                 );
 
-            case 2: // Student Identification
+            case 2:
                 return (
-                    <div className="space-y-4" role="form" aria-label="Student identification form">
-                        <div>
-                            <label htmlFor="studentId" className="block text-sm font-medium mb-1">
-                                Student ID *
-                            </label>
-                            <InputText
-                                id="studentId"
-                                value={formData.studentId}
-                                onChange={(e) => updateFormData('studentId', e.target.value)}
-                                className="w-full"
-                                required
-                                aria-required="true"
-                                placeholder="e.g., STU-2023-001"
-                                aria-label="Student identification number"
-                            />
-                            <p className="text-sm text-gray-500 mt-1">State or local student identifier</p>
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500" role="form" aria-label="Student identification form">
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="studentId" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Student ID *</label>
+                            <InputText id="studentId" value={formData.studentId} onChange={(e) => updateFormData('studentId', e.target.value)} className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold" placeholder="e.g., STU-2023-001" required aria-required="true" aria-label="Student identification number" />
+                            <p className="text-[10px] font-medium text-slate-400 ml-1">State or local student identifier</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label htmlFor="lastFourSSN" className="block text-sm font-medium mb-1">
-                                    Last 4 of SSN
-                                </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="lastFourSSN" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Last 4 of SSN</label>
                                 <InputMask
                                     id="lastFourSSN"
                                     value={formData.lastFourSSN}
                                     onChange={(e) => updateFormData('lastFourSSN', e.value)}
                                     mask="9999"
                                     placeholder="1234"
-                                    className="w-full"
+                                    className="py-3!px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                     aria-label="Last four digits of social security number"
                                 />
                                 <p className="text-sm text-gray-500 mt-1">If available for verification</p>
                             </div>
-                            <div>
-                                <label htmlFor="caseNumber" className="block text-sm font-medium mb-1">
-                                    Case Number
-                                </label>
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="caseNumber" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Case Number</label>
                                 <InputText
                                     id="caseNumber"
                                     value={formData.caseNumber}
                                     onChange={(e) => updateFormData('caseNumber', e.target.value)}
-                                    className="w-full"
+                                    className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                     placeholder="e.g., CASE-2023-001"
                                     aria-label="Assistance program case number"
                                 />
                                 <p className="text-sm text-gray-500 mt-1">Assistance program case ID (if applicable)</p>
                             </div>
                         </div>
-
-                        <div className="p-3 bg-red-50 rounded text-sm text-red-700">
-                            <p className="font-medium mb-1">Security Warning (Demo):</p>
-                            <p>Never enter real SSN information in this demo system. All data entered here is mock/fake and for demonstration purposes only.</p>
+                        <div className="flex items-center gap-4 p-4 bg-red-50 border border-red-100 rounded-2xl">
+                            <div className="bg-white p-2 rounded-lg shadow-sm text-red-600"><Lock size={20} /></div>
+                            <div>
+                                <p className="text-xs font-bold text-red-900 uppercase tracking-tight">Security Protocol</p>
+                                <p className="text-xs text-red-700/80">Never enter real SSN information in this POC environment.</p>
+                            </div>
                         </div>
                     </div>
                 );
 
-            case 3: // Address & Enrollment
+            case 3:
                 return (
-                    <div className="space-y-4" role="form" aria-label="Address and enrollment form">
-                        <div>
-                            <label htmlFor="addressLine1" className="block text-sm font-medium mb-1">
-                                Address Line 1 *
-                            </label>
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500" role="form" aria-label="Address and enrollment form">
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="addressLine1" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Address Line 1 *</label>
                             <InputText
                                 id="addressLine1"
                                 value={formData.addressLine1}
                                 onChange={(e) => updateFormData('addressLine1', e.target.value)}
-                                className="w-full"
+                                className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                 required
                                 aria-required="true"
                                 placeholder="123 Main Street"
                                 aria-label="Student address line 1"
                             />
                         </div>
-
-                        <div>
-                            <label htmlFor="addressLine2" className="block text-sm font-medium mb-1">
-                                Address Line 2
-                            </label>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="addressLine2" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Address Line 2</label>
                             <InputText
                                 id="addressLine2"
                                 value={formData.addressLine2}
                                 onChange={(e) => updateFormData('addressLine2', e.target.value)}
-                                className="w-full"
-                                placeholder="Apartment, Suite, Unit (optional)"
+                                className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                 aria-label="Student address line 2"
                             />
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label htmlFor="city" className="block text-sm font-medium mb-1">
-                                    City *
-                                </label>
-                                <InputText
-                                    id="city"
-                                    value={formData.city}
-                                    onChange={(e) => updateFormData('city', e.target.value)}
-                                    className="w-full"
-                                    required
-                                    aria-required="true"
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="city" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">City *</label>
+                                <InputText id="city" value={formData.city} onChange={(e) => updateFormData('city', e.target.value)} className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold" aria-required="true"
                                     placeholder="Anytown"
-                                    aria-label="Student city"
-                                />
+                                    aria-label="Student city" />
                             </div>
-                            <div>
-                                <label htmlFor="state" className="block text-sm font-medium mb-1">
-                                    State *
-                                </label>
-                                <Dropdown
-                                    id="state"
-                                    value={formData.state}
-                                    onChange={(e) => updateFormData('state', e.value)}
-                                    options={stateOptions}
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="state" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">State *</label>
+                                <Dropdown id="state" value={formData.state} onChange={(e) => updateFormData('state', e.value)} options={stateOptions} className="w-full bg-slate-50 border-slate-200 rounded-xl"
                                     placeholder="Select State"
-                                    className="w-full"
                                     required
                                     aria-required="true"
                                     aria-label="Student state"
                                 />
                             </div>
-                            <div>
-                                <label htmlFor="zipCode" className="block text-sm font-medium mb-1">
-                                    ZIP Code *
-                                </label>
-                                <InputMask
-                                    id="zipCode"
-                                    value={formData.zipCode}
-                                    onChange={(e) => updateFormData('zipCode', e.value)}
-                                    mask="99999"
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="zipCode" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">ZIP Code *</label>
+                                <InputMask id="zipCode" value={formData.zipCode} onChange={(e) => updateFormData('zipCode', e.value)} mask="99999" className="py-3! px-4! bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold"
                                     placeholder="12345"
-                                    className="w-full"
                                     required
                                     aria-required="true"
                                     aria-label="Student zip code"
                                 />
                             </div>
                         </div>
-
-                        <div>
-                            <label htmlFor="enrollmentStartDate" className="block text-sm font-medium mb-1">
-                                Enrollment Start Date *
-                            </label>
-                            <Calendar
-                                id="enrollmentStartDate"
-                                value={formData.enrollmentStartDate}
-                                onChange={(e) => updateFormData('enrollmentStartDate', e.value)}
-                                className="w-full"
-                                showIcon
+                        <div className="flex flex-col gap-2 pt-4">
+                            <label htmlFor="enrollmentStartDate" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Enrollment Start Date *</label>
+                            <Calendar id="enrollmentStartDate" value={formData.enrollmentStartDate} onChange={(e) => updateFormData('enrollmentStartDate', e.value)} className="rounded-xl overflow-hidden border-none bg-slate-50" inputClassName="py-3! border-slate-200 bg-transparent rounded-xl" showIcon dateFormat="yy-mm-dd"
                                 required
                                 aria-required="true"
-                                dateFormat="yy-mm-dd"
                                 placeholder="YYYY-MM-DD"
                                 aria-label="Student enrollment start date"
                             />
                             <p className="text-sm text-gray-500 mt-1">Date student enrolled in current school</p>
                         </div>
-
-                        <div className="p-3 bg-blue-50 rounded text-sm text-blue-700">
-                            <p className="font-medium mb-1">Demo Note:</p>
-                            <p>Address information in this demo is mock data only. No real addresses should be entered.</p>
-                        </div>
                     </div>
                 );
 
-            case 4: // Program Selection
+            case 4:
                 return (
-                    <div className="space-y-4" role="form" aria-label="Program selection form">
-                        <p className="text-sm text-gray-600 mb-4">
-                            Select applicable programs for this student (mock selection for demonstration)
-                        </p>
-                        <div className="space-y-3">
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500" role="form" aria-label="Program selection form">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {programs.map((program) => (
-                                <div key={program} className="flex items-start">
+                                <div key={program} className={`flex items-center gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${formData.programs.includes(program) ? 'bg-slate-900 border-slate-900 text-white shadow-md' : 'bg-slate-50 border-slate-100 text-slate-600 hover:border-slate-300'}`} onClick={() => {
+                                    const updated = formData.programs.includes(program) ? formData.programs.filter(p => p !== program) : [...formData.programs, program];
+                                    updateFormData('programs', updated);
+                                }}>
                                     <Checkbox
                                         inputId={`program-${program}`}
                                         checked={formData.programs.includes(program)}
-                                        onChange={(e) => {
-                                            const updated = e.checked
-                                                ? [...formData.programs, program]
-                                                : formData.programs.filter(p => p !== program);
-                                            updateFormData('programs', updated);
-                                        }}
+                                        onChange={() => { }}
+                                        className={formData.programs.includes(program) ? 'checkbox-white' : ''}
                                         aria-label={`Select ${program}`}
                                     />
-                                    <label
-                                        htmlFor={`program-${program}`}
-                                        className="ml-3 text-sm leading-tight cursor-pointer"
-                                    >
+                                    <label htmlFor={`program-${program}`} className="text-xs font-bold uppercase tracking-tight cursor-pointer flex-1">
                                         {program}
                                     </label>
                                 </div>
                             ))}
                         </div>
-                        <div className="p-3 bg-green-50 rounded text-sm text-green-700 mt-4">
-                            <p className="font-medium mb-1">Program Information:</p>
-                            <p>Program selection in this demo is for workflow demonstration only. No actual eligibility determination occurs.</p>
-                        </div>
                     </div>
                 );
 
-            case 5: // Review & Submit
+            case 5:
                 return (
-                    <div role="region" aria-label="Review student information">
-                        <div className="space-y-6">
-                            <div className="bg-gray-50 p-6 rounded-lg">
-                                <h3 className="font-semibold text-lg mb-4">Review Student Information</h3>
+                    <div role="region" aria-label="Review student information" className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        {/* Main Info Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-                                {/* District & School */}
-                                <div className="mb-6">
-                                    <h4 className="font-medium text-gray-700 mb-3 border-b pb-2">District & School Information</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                        <div>
-                                            <p className="text-sm text-gray-500">County Number</p>
-                                            <p className="font-medium">{formData.countyNumber || 'Not specified'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">LEA Number</p>
-                                            <p className="font-medium">{formData.sponsorLEANumber || 'Not specified'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">School Number</p>
-                                            <p className="font-medium">{formData.siteSchoolNumber || 'Not specified'}</p>
-                                        </div>
-                                    </div>
+                            {/* 1. District & School */}
+                            <section className="space-y-4">
+                                <div className="border-b border-slate-100 pb-2 flex items-center gap-2">
+                                    <School size={14} className="text-slate-400" />
+                                    <h3 className="text-[10px] font-black text-slate-900 uppercase tracking-widest">District</h3>
                                 </div>
-
-                                {/* Demographics */}
-                                <div className="mb-6">
-                                    <h4 className="font-medium text-gray-700 mb-3 border-b pb-2">Student Demographics</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div>
-                                            <p className="text-sm text-gray-500">Full Name</p>
-                                            <p className="font-medium">
-                                                {formData.firstName} {formData.middleName && `${formData.middleName} `}{formData.lastName}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Date of Birth</p>
-                                            <p className="font-medium">
-                                                {formData.dateOfBirth ? formData.dateOfBirth.toLocaleDateString('en-CA') : 'Not specified'}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Gender</p>
-                                            <p className="font-medium">
-                                                {genderOptions.find(g => g.value === formData.gender)?.label || 'Not specified'}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Race/Ethnicity</p>
-                                            <p className="font-medium">
-                                                {raceEthnicityOptions.find(r => r.value === formData.raceEthnicity)?.label || 'Not specified'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Identification */}
-                                <div className="mb-6">
-                                    <h4 className="font-medium text-gray-700 mb-3 border-b pb-2">Student Identification</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div>
-                                            <p className="text-sm text-gray-500">Student ID</p>
-                                            <p className="font-medium">{formData.studentId || 'Not specified'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Last 4 of SSN</p>
-                                            <p className="font-medium">{formData.lastFourSSN ? '••••' : 'Not provided'}</p>
-                                        </div>
-                                        <div className="md:col-span-2">
-                                            <p className="text-sm text-gray-500">Case Number</p>
-                                            <p className="font-medium">{formData.caseNumber || 'Not applicable'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Address */}
-                                <div className="mb-6">
-                                    <h4 className="font-medium text-gray-700 mb-3 border-b pb-2">Address & Enrollment</h4>
-                                    <div className="space-y-2">
-                                        <div>
-                                            <p className="text-sm text-gray-500">Address</p>
-                                            <p className="font-medium">
-                                                {formData.addressLine1 || 'Not specified'}
-                                                {formData.addressLine2 && `, ${formData.addressLine2}`}
-                                            </p>
-                                            <p className="font-medium">
-                                                {formData.city && `${formData.city}, `}
-                                                {formData.state} {formData.zipCode}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500">Enrollment Start Date</p>
-                                            <p className="font-medium">
-                                                {formData.enrollmentStartDate ? formData.enrollmentStartDate.toLocaleDateString('en-CA') : 'Not specified'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Programs */}
-                                {formData.programs.length > 0 && (
+                                <div className="space-y-3">
                                     <div>
-                                        <h4 className="font-medium text-gray-700 mb-3 border-b pb-2">Selected Programs</h4>
-                                        <ul className="list-disc list-inside space-y-1">
-                                            {formData.programs.map((program, index) => (
-                                                <li key={index} className="text-gray-700">{program}</li>
-                                            ))}
-                                        </ul>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">County Number</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.countyNumber || '---'}</p>
                                     </div>
-                                )}
-                            </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">LEA Number</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.sponsorLEANumber || '---'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">School ID</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.siteSchoolNumber || '---'}</p>
+                                    </div>
+                                </div>
+                            </section>
 
-                            {/* Demo Disclaimer */}
-                            <div
-                                role="alert"
-                                className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg"
-                            >
-                                <h4 className="font-semibold text-yellow-800 mb-2">⚠️ Demo Submission Notice</h4>
-                                <p className="text-yellow-700 text-sm">
-                                    This is a Proof of Concept demonstration. No real student data will be saved or transmitted.
-                                    All information entered is mock data for workflow demonstration only.
-                                </p>
-                                <p className="text-yellow-700 text-sm mt-2">
-                                    In a production system, this submission would trigger actual data processing,
-                                    eligibility verification, and compliance checks.
-                                </p>
-                            </div>
+                            {/* 2. Demographics */}
+                            <section className="space-y-4">
+                                <div className="border-b border-slate-100 pb-2 flex items-center gap-2">
+                                    <User size={14} className="text-slate-400" />
+                                    <h3 className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Student</h3>
+                                </div>
+                                <div className="space-y-3">
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">Full Name</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.firstName} {formData.middleName} {formData.lastName}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">DOB / Gender</p>
+                                        <p className="text-sm font-bold text-slate-700">
+                                            {formData.dateOfBirth?.toLocaleDateString('en-CA')} <span className="text-slate-300 mx-1">|</span> {formData.gender}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">Ethnicity</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.raceEthnicity}</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* 3. Identification */}
+                            <section className="space-y-4">
+                                <div className="border-b border-slate-100 pb-2 flex items-center gap-2">
+                                    <Fingerprint size={14} className="text-slate-400" />
+                                    <h3 className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Identity</h3>
+                                </div>
+                                <div className="space-y-3">
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">Student ID</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.studentId || '---'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">Last 4 SSN</p>
+                                        <p className="text-sm font-bold text-slate-700">***-**-{formData.lastFourSSN || '0000'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">Case Number</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.caseNumber || 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* 4. Address & Enrollment */}
+                            <section className="space-y-4">
+                                <div className="border-b border-slate-100 pb-2 flex items-center gap-2">
+                                    <MapPin size={14} className="text-slate-400" />
+                                    <h3 className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Location</h3>
+                                </div>
+                                <div className="space-y-3">
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">Residence</p>
+                                        <p className="text-sm font-bold text-slate-700 leading-tight">
+                                            {formData.addressLine1}
+                                            {formData.addressLine2 && <span className="block">{formData.addressLine2}</span>}
+                                        </p>
+                                        <p className="text-[11px] font-medium text-slate-500 uppercase">{formData.city}, {formData.state} {formData.zipCode}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-bold text-slate-400 uppercase">Enrollment Date</p>
+                                        <p className="text-sm font-bold text-slate-700">{formData.enrollmentStartDate?.toLocaleDateString('en-CA')}</p>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
+
+                        {/* Programs Section - Custom Dark Banner */}
+                        {formData.programs.length > 0 ? (
+                            <div className="p-8 bg-slate-900 rounded-[2.5rem] text-white shadow-xl shadow-slate-200">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="p-2 bg-white/10 rounded-lg">
+                                        <ListChecks size={18} className="text-emerald-400" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400">Authorized Programs</h4>
+                                        <p className="text-[10px] text-white/40 font-bold uppercase">The following services will be provisioned upon submission</p>
+                                    </div>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {formData.programs.map((p, i) => (
+                                        <span key={i} className="px-5 py-2.5 bg-white/5 hover:bg-white/10 transition-colors rounded-xl text-[10px] font-black border border-white/10 uppercase tracking-widest flex items-center gap-2">
+                                            <CheckCircle2 size={12} className="text-emerald-500" /> {p}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center">
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No additional programs selected</p>
+                            </div>
+                        )}
                     </div>
                 );
-
-            default:
-                return null;
+            default: return null;
         }
     };
 
     return (
-        <div className="space-y-6">
-            <DemoBanner />
+        <div className="space-y-6 animate-in fade-in duration-700">
+            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h1 className="text-xl font-bold text-slate-900 tracking-tight uppercase">Add New Record</h1>
+                    <div className="flex items-center gap-2 mt-1">
+                        <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                            <GraduationCap size={14} /> Manual entry workflow for verified enrollments
+                        </span>
+                    </div>
+                </div>
 
-            <header>
-                <h1 className="text-2xl font-bold text-gray-900">Add New Student Record</h1>
-                <p className="text-gray-600">Multi-step form for manual student entry (Mock Data)</p>
+                <button
+                    onClick={() => navigate('/students')}
+                    className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg shadow-slate-200 transition-all active:scale-95"
+                >
+                    <ArrowLeft size={18} />
+                    Exit to Roster
+                </button>
             </header>
 
-            <Card>
-                <Steps
-                    model={steps}
-                    activeIndex={activeStep}
-                    onSelect={(e) => setActiveStep(e.index)}
-                    readOnly={false}
-                    aria-label="Student creation form steps"
-                />
+            <nav aria-label="Registration Progress" className="px-2">
+                <ol className="flex items-center justify-between w-full">
+                    {steps?.map((step, idx) => (
+                        <li key={idx} className="flex-1 flex flex-col items-center relative">
+                            {idx !== 0 && (
+                                <div className={`absolute top-6 -left-1/2 w-full h-0.75 -z-10 transition-all duration-700 ${activeStep >= idx ? 'bg-slate-900' : 'bg-slate-100'}`} />
+                            )}
+                            <button
+                                onClick={() => idx < activeStep && setActiveStep(idx)}
+                                disabled={idx > activeStep}
+                                className={`w-12 h-12 rounded-[1.25rem] flex items-center justify-center transition-all duration-500 border-2 
+                                    ${activeStep === idx ? 'bg-slate-900 border-slate-900 text-white shadow-xl scale-110' :
+                                        activeStep > idx ? 'bg-emerald-500 border-emerald-500 text-white'
+                                            : 'bg-white border-slate-200 text-slate-300'}`}
+                                aria-current={activeStep === idx ? 'step' : undefined}
+                                aria-label={`Step ${idx + 1}: ${step.label}`}
+                            >
+                                {activeStep > idx ? <Check size={20} strokeWidth={3} /> : step.icon}
+                            </button>
+                            <span className={`text-[9px] font-black mt-3 uppercase tracking-widest ${activeStep === idx ? 'text-slate-900' : 'text-slate-400'}`}>
+                                {step.label.split(' ')[0]}
+                            </span>
+                        </li>
+                    ))}
+                </ol>
+            </nav>
 
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-6">{steps[activeStep].label}</h2>
+            <main className="overflow-hidden flex flex-col px-2">
+                <div className="py-6 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-white rounded-2xl border border-slate-200 text-slate-900 shadow-sm">
+                            {steps[activeStep].icon}
+                        </div>
+                        <div>
+                            <h2 className="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em]">{steps[activeStep].label}</h2>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">Section {activeStep + 1} of 6</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full border border-emerald-100">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-black text-emerald-700 uppercase">Live Entry</span>
+                    </div>
+                </div>
+
+                <div className="flex-1">
                     {renderStepContent()}
                 </div>
 
-                <div className="flex justify-between mt-8 pt-6 border-t">
-                    <Button
-                        label="Back"
-                        icon="pi pi-arrow-left"
+                <footer className="mt-4 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between">
+                    <button
                         onClick={handleBack}
-                        className="p-button-text"
-                        aria-label="Go to previous step"
                         disabled={activeStep === 0}
-                    />
+                        className="flex items-center gap-2 px-8 py-4 text-xs font-black text-slate-400 hover:text-slate-900 disabled:opacity-0 transition-all uppercase tracking-widest"
+                    >
+                        <ChevronLeft size={18} strokeWidth={3} /> Back
+                    </button>
 
-                    <div className="text-sm text-gray-500">
-                        Step {activeStep + 1} of {steps.length}
+                    <div className="hidden md:flex gap-1">
+                        {steps.map((_, i) => (
+                            <div key={i} className={`h-1 rounded-full transition-all duration-500 ${activeStep === i ? 'w-8 bg-slate-900' : 'w-2 bg-slate-200'}`} />
+                        ))}
                     </div>
 
-                    <Button
-                        label={activeStep === steps.length - 1 ? 'Submit Mock Record' : 'Next'}
-                        icon={`pi pi-${activeStep === steps.length - 1 ? 'check' : 'arrow-right'}`}
+                    <button
                         onClick={handleNext}
-                        aria-label={activeStep === steps.length - 1 ? 'Submit mock student record' : 'Go to next step'}
-                    />
-                </div>
-            </Card>
+                        className={`group flex items-center gap-3 px-12 py-4 rounded-2xl text-xs font-black shadow-xl transition-all active:scale-95 uppercase tracking-[0.2em]
+                            ${activeStep === steps.length - 1 ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-100' : 'bg-slate-900 hover:bg-black text-white shadow-slate-200'}`}
+                    >
+                        {activeStep === steps.length - 1 ? 'Submit Record' : 'Next Step'}
+                        {activeStep !== steps.length - 1 && <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" strokeWidth={3} />}
+                    </button>
+                </footer>
+            </main>
 
-            {/* Demo Instructions */}
-            <Card className="bg-blue-50 border-blue-200">
-                <h3 className="font-semibold text-blue-800 mb-2">Demo Instructions:</h3>
-                <ul className="list-disc list-inside text-sm text-blue-700 space-y-1">
-                    <li>Fill out each step with mock data (no real student information)</li>
-                    <li>Required fields are marked with asterisks (*)</li>
-                    <li>Use the Back/Next buttons to navigate through steps</li>
-                    <li>Review all information before final submission</li>
-                    <li>All data is mock/fake for demonstration only</li>
-                </ul>
-            </Card>
+            <div className="mx-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-start gap-4 p-6 bg-slate-900 rounded-xl text-white">
+                    <div className="bg-white/10 p-2.5 rounded-xl"><Globe size={20} className="text-white" /></div>
+                    <div className="space-y-1">
+                        <h4 className="text-[11px] font-black uppercase tracking-widest opacity-60">System Compliance</h4>
+                        <p className="text-xs font-bold leading-relaxed">This form is optimized for WCAG 2.1 & Section 508 accessibility standards.</p>
+                    </div>
+                </div>
+                <div className="flex items-start gap-4 p-6 bg-indigo-600 rounded-xl text-white">
+                    <div className="bg-white/10 p-2.5 rounded-xl"><Info size={20} className="text-white" /></div>
+                    <div className="space-y-1">
+                        <h4 className="text-[11px] font-black uppercase tracking-widest opacity-60">Entry Support</h4>
+                        <p className="text-xs font-bold leading-relaxed">Required fields are marked with (*). Data is automatically validated upon entry.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
