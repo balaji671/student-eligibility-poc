@@ -23,7 +23,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <header role="banner" className="flex flex-col md:flex-row md:items-center justify-between gap-4" data-aos="fade-right">
+      <header role="banner" className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">LEA Dashboard</h1>
           <p className="text-slate-500 font-medium">Insights and student management overview</p>
@@ -45,8 +45,6 @@ export const Dashboard: React.FC = () => {
             onClick={stat?.onClick}
             role="button"
             tabIndex={0}
-            data-aos="zoom-in"
-            data-aos-delay={index * 100}
             onKeyDown={(e) => e.key === 'Enter' && stat.onClick()}
           >
             <div className='flex flex-col justify-between'>
@@ -71,7 +69,6 @@ export const Dashboard: React.FC = () => {
       <div className="flex flex-col lg:flex-row gap-8">
         <div
           className="flex-1 min-w-75 bg-white border border-gray-200 p-5 shadow-md rounded-2xl flex flex-col"
-          data-aos="fade-up"
         >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-slate-800">Status Distribution</h2>
@@ -82,7 +79,7 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex-1 min-w-75 bg-white border border-gray-200 p-5 shadow-md rounded-2xl flex flex-col" data-aos="fade-up" data-aos-delay="500">
+        <div className="flex-1 min-w-75 bg-white border border-gray-200 p-5 shadow-md rounded-2xl flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-slate-800">Enrollment Trend</h2>
             <Button icon="pi pi-refresh" className="p-button-text p-button-rounded text-slate-400" />
@@ -93,7 +90,7 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full border border-gray-200 p-8 shadow-md rounded-2xl bg-slate-900 text-white relative overflow-hidden" data-aos="fade-up">
+      <div className="w-full border border-gray-200 p-8 shadow-md rounded-2xl bg-slate-900 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <FileUp size={120} />
         </div>
@@ -111,7 +108,7 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="border border-gray-200 p-6 shadow-md rounded-2xl h-fit bg-white flex flex-col" data-aos="fade-left">
+      <div className="border border-gray-200 p-6 shadow-md rounded-2xl h-fit bg-white flex flex-col">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-lg font-bold text-slate-800">Recent Activity</h2>
           <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase">Live Updates</span>
