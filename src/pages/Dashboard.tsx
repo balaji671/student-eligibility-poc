@@ -90,7 +90,7 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full border border-gray-200 p-8 shadow-md rounded-2xl bg-slate-900 text-white relative overflow-hidden">
+      <div className="w-full border border-gray-200 p-8 shadow-md rounded-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <FileUp size={120} />
         </div>
