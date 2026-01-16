@@ -10,6 +10,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
 
 const mockStudents = [
     { id: 'S1001', firstName: 'John', lastName: 'Smith', email: 'john.smith@edu.com', dateOfBirth: '2010-05-15', grade: '8', status: 'Eligible', flags: [] },
@@ -94,15 +95,15 @@ export const StudentsList = () => {
     const actionsBodyTemplate = (rowData: any) => {
         return (
             <div className="flex items-center justify-center gap-1">
-                <button onClick={() => navigate(`/students/${rowData.id}/edit`)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" aria-label={`Edit ${rowData.firstName} ${rowData.lastName}`}>
+                <Button outlined onClick={() => navigate(`/students/${rowData.id}/edit`)} className="border-none! p-2! text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title={`Edit ${rowData.firstName} ${rowData.lastName}`} aria-label={`Edit ${rowData.firstName} ${rowData.lastName}`}>
                     <Pencil size={15} />
-                </button>
-                <button onClick={() => navigate(`/students/${rowData.id}`)} className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all" aria-label={`View details for ${rowData.firstName} ${rowData.lastName}`}>
+                </Button>
+                <Button outlined onClick={() => navigate(`/students/${rowData.id}`)} className="border-none! p-2! text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all" title={`View details for ${rowData.firstName} ${rowData.lastName}`} aria-label={`View details for ${rowData.firstName} ${rowData.lastName}`}>
                     <Eye size={15} />
-                </button>
-                <button onClick={() => navigate(`/eligibility/${rowData.id}`)} className="p-2 text-slate-400 hover:text-emerald-900 hover:bg-emerald-100 rounded-lg transition-all" aria-label={`Review eligibility for ${rowData.firstName} ${rowData.lastName}`}>
+                </Button>
+                <Button outlined onClick={() => navigate(`/eligibility/${rowData.id}`)} className="border-none! p-2! text-slate-400 hover:text-emerald-900 hover:bg-emerald-100 rounded-lg transition-all" title={`Review eligibility for ${rowData.firstName} ${rowData.lastName}`} aria-label={`Review eligibility for ${rowData.firstName} ${rowData.lastName}`}>
                     <CheckCircle2 size={15} />
-                </button>
+                </Button>
             </div>
         );
     };
