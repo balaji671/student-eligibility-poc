@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card } from 'primereact/card';
-import { Button } from 'primereact/button';
+import {
+    CheckCircle,
+    XCircle,
+    AlertCircle,
+    User,
+    ShieldCheck,
+    ChevronLeft,
+    ClipboardCheck,
+    FileText,
+    History,
+    ArrowRight
+} from 'lucide-react';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { DemoBanner } from '../components/Common/DemoBanner';
-import { StatusBadge } from '../components/UI/StatusBadge';
 
 export const EligibilityReview: React.FC = () => {
     const { id } = useParams();
@@ -22,8 +29,8 @@ export const EligibilityReview: React.FC = () => {
         dob: '2010-05-15',
         enrollmentDate: '2023-08-20',
         programs: ['Free Lunch'],
-        householdIncome: '$25k-$50k',
-        previousStatus: 'Review'
+        householdIncome: '$25,000 - $50,000',
+        previousStatus: 'Review Pending'
     };
 
     const handleSubmit = () => {
@@ -31,188 +38,185 @@ export const EligibilityReview: React.FC = () => {
             toast.error('Please select an eligibility decision');
             return;
         }
-
         toast.success(`Marked as ${decision === 'eligible' ? 'Eligible' : 'Not Eligible'} (Demo)`);
         navigate(`/students/${mockStudent.id}`);
     };
 
     return (
-        <div className="space-y-6">
-            <DemoBanner />
+        <div className="space-y-6 pb-20 animate-in fade-in duration-700">
+            {/* 1. Standardized Header UI */}
+            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-4 pt-8">
+                <div>
+                    <h1 className="text-xl font-bold text-slate-900 tracking-tight uppercase leading-none">Eligibility Determination</h1>
+                    <div className="flex items-center gap-2 mt-2">
+                        <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 uppercase tracking-widest">
+                            <ShieldCheck size={14} /> Verification Protocol Active
+                        </span>
+                    </div>
+                </div>
 
-            <header>
-                <h1 className="text-2xl font-bold text-gray-900">Eligibility Review</h1>
-                <p className="text-gray-600">Mock eligibility decision workflow</p>
+                <button
+                    onClick={() => navigate('/students')}
+                    className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg shadow-slate-200 transition-all active:scale-95"
+                    aria-label="Return to student list"
+                >
+                    <ChevronLeft size={16} /> Exit Review
+                </button>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Student Summary */}
-                <Card className="lg:col-span-1">
-                    <h2 className="font-semibold mb-4">Student Summary</h2>
-                    <dl className="space-y-3">
-                        <div>
-                            <dt className="text-sm text-gray-500">Student ID</dt>
-                            <dd className="font-medium">{mockStudent.id}</dd>
-                        </div>
-                        <div>
-                            <dt className="text-sm text-gray-500">Name</dt>
-                            <dd className="font-medium">{mockStudent.name}</dd>
-                        </div>
-                        <div>
-                            <dt className="text-sm text-gray-500">Grade</dt>
-                            <dd className="font-medium">{mockStudent.grade}</dd>
-                        </div>
-                        <div>
-                            <dt className="text-sm text-gray-500">Current Status</dt>
-                            <dd className="mt-1"><StatusBadge status={mockStudent.previousStatus as any} /></dd>
-                        </div>
-                    </dl>
-                </Card>
-
-                {/* Review Form */}
-                <Card className="lg:col-span-2">
-                    <h2 className="font-semibold mb-6">Eligibility Decision</h2>
-
-                    {/* Mock Eligibility Criteria */}
-                    <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                        <h3 className="font-medium text-blue-800 mb-2 flex items-center">
-                            <AlertCircle className="h-4 w-4 mr-2" />
-                            Mock Eligibility Criteria (Simulated)
-                        </h3>
-                        <ul className="list-disc list-inside text-sm text-blue-700 space-y-1">
-                            <li>Household income within program limits (simulated check)</li>
-                            <li>Residency verification (simulated check)</li>
-                            <li>Age/grade requirements (simulated check)</li>
-                            <li>Program-specific criteria (simulated check)</li>
-                        </ul>
-                    </div>
-
-                    {/* Decision Selection */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium mb-3">
-                            Select Eligibility Decision *
-                        </label>
-                        <div className="space-y-3">
-                            <div className="flex items-center">
-                                <RadioButton
-                                    inputId="eligible"
-                                    name="decision"
-                                    value="eligible"
-                                    onChange={(e) => setDecision(e.value)}
-                                    checked={decision === 'eligible'}
-                                    aria-label="Mark as eligible"
-                                />
-                                <label
-                                    htmlFor="eligible"
-                                    className="ml-2 flex items-center text-green-700 font-medium"
-                                >
-                                    <CheckCircle className="h-5 w-5 mr-2" />
-                                    Eligible
-                                </label>
+            <main className="mx-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* 2. Left Column: Student Dossier */}
+                <aside className="lg:col-span-4 space-y-6">
+                    <section className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm">
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="p-3 bg-slate-900 text-white rounded-2xl">
+                                <User size={20} />
                             </div>
-                            <div className="flex items-center">
-                                <RadioButton
-                                    inputId="ineligible"
-                                    name="decision"
-                                    value="ineligible"
-                                    onChange={(e) => setDecision(e.value)}
-                                    checked={decision === 'ineligible'}
-                                    aria-label="Mark as ineligible"
-                                />
-                                <label
-                                    htmlFor="ineligible"
-                                    className="ml-2 flex items-center text-red-700 font-medium"
-                                >
-                                    <XCircle className="h-5 w-5 mr-2" />
-                                    Not Eligible
-                                </label>
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Subject Profile</p>
+                                <h2 className="text-lg font-bold text-slate-900 tracking-tight">{mockStudent.name}</h2>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Notes */}
-                    <div className="mb-6">
-                        <label
-                            htmlFor="notes"
-                            className="block text-sm font-medium mb-2"
-                        >
-                            Review Notes (Optional)
-                        </label>
-                        <InputTextarea
-                            id="notes"
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            rows={4}
-                            className="w-full"
-                            placeholder="Add any notes or comments about this eligibility decision..."
-                            aria-label="Review notes"
-                        />
-                    </div>
+                        <dl className="space-y-6">
+                            <InfoField label="Internal ID" value={mockStudent.id} />
+                            <InfoField label="Academic Grade" value={`${mockStudent.grade}th Grade`} />
+                            <InfoField label="Current Status" value={mockStudent.previousStatus} isStatus />
+                            <InfoField label="Household Income" value={mockStudent.householdIncome} />
+                        </dl>
+                    </section>
 
-                    {/* Action Buttons */}
-                    <div className="flex justify-between">
-                        <Button
-                            label="Back to Student"
-                            icon="pi pi-arrow-left"
-                            className="p-button-text"
-                            onClick={() => navigate(`/students/${mockStudent.id}`)}
-                            aria-label="Go back to student details"
-                        />
-                        <div className="space-x-3">
-                            <Button
-                                label="Request Correction"
-                                icon="pi pi-exclamation-circle"
-                                className="p-button-warning"
-                                onClick={() => {
-                                    toast.info('Correction requested (Demo)');
-                                    navigate('/students');
-                                }}
-                                aria-label="Request correction"
+                    <section className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+                        <History size={80} className="absolute -right-4 -bottom-4 opacity-10" />
+                        <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4 text-emerald-400">System Audit</h3>
+                        <p className="text-sm font-bold leading-relaxed opacity-80">
+                            Last automated check performed on {new Date().toLocaleDateString()}. No discrepancies found in residency records.
+                        </p>
+                    </section>
+                </aside>
+
+                {/* 3. Right Column: Decision Form */}
+                <section className="lg:col-span-8 space-y-6">
+                    <article className="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-10 shadow-sm relative overflow-hidden">
+                        <div className="flex items-center gap-2 mb-8">
+                            <ClipboardCheck className="text-slate-900" size={24} />
+                            <h2 className="text-sm font-black text-slate-900 uppercase tracking-widest">Adjudication Form</h2>
+                        </div>
+
+                        {/* Criteria Checklist */}
+                        <div className="mb-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <CriteriaItem label="Income Verification" />
+                            <CriteriaItem label="Residency Validation" />
+                            <CriteriaItem label="Grade Level Check" />
+                            <CriteriaItem label="Program Specifics" />
+                        </div>
+
+                        {/* Decision Selection */}
+                        <fieldset className="mb-10">
+                            <legend className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Final Determination</legend>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <label
+                                    className={`flex items-center p-6 rounded-3xl border-2 transition-all cursor-pointer ${decision === 'eligible' ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
+                                >
+                                    <RadioButton
+                                        inputId="eligible"
+                                        name="decision"
+                                        value="eligible"
+                                        onChange={(e) => setDecision(e.value)}
+                                        checked={decision === 'eligible'}
+                                    />
+                                    <div className="ml-4">
+                                        <span className={`text-sm font-black uppercase tracking-widest flex items-center gap-2 ${decision === 'eligible' ? 'text-emerald-700' : 'text-slate-500'}`}>
+                                            <CheckCircle size={16} /> Eligible
+                                        </span>
+                                    </div>
+                                </label>
+
+                                <label
+                                    className={`flex items-center p-6 rounded-3xl border-2 transition-all cursor-pointer ${decision === 'ineligible' ? 'border-rose-500 bg-rose-50/50' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}`}
+                                >
+                                    <RadioButton
+                                        inputId="ineligible"
+                                        name="decision"
+                                        value="ineligible"
+                                        onChange={(e) => setDecision(e.value)}
+                                        checked={decision === 'ineligible'}
+                                    />
+                                    <div className="ml-4">
+                                        <span className={`text-sm font-black uppercase tracking-widest flex items-center gap-2 ${decision === 'ineligible' ? 'text-rose-700' : 'text-slate-500'}`}>
+                                            <XCircle size={16} /> Ineligible
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        {/* Notes */}
+                        <div className="mb-10">
+                            <label htmlFor="notes" className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 block">
+                                Adjudication Rationale
+                            </label>
+                            <InputTextarea
+                                id="notes"
+                                value={notes}
+                                onChange={(e) => setNotes(e.target.value)}
+                                rows={4}
+                                className="w-full p-6 rounded-3xl border-slate-200 focus:border-slate-900 transition-all text-sm font-medium"
+                                placeholder="State the reasoning for this decision..."
                             />
-                            <Button
-                                label="Submit Decision"
-                                icon="pi pi-check"
-                                className="p-button-success"
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-100">
+                            <button
+                                onClick={() => toast.info('Correction process initiated')}
+                                className="text-xs font-black text-amber-600 uppercase tracking-widest hover:text-amber-700 transition-all flex items-center gap-2"
+                            >
+                                <AlertCircle size={16} /> Request Correction
+                            </button>
+
+                            <button
                                 onClick={handleSubmit}
                                 disabled={!decision}
-                                aria-label="Submit eligibility decision"
-                            />
+                                className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200 disabled:opacity-20 flex items-center justify-center gap-2"
+                            >
+                                Submit Determination <ArrowRight size={16} />
+                            </button>
+                        </div>
+                    </article>
+
+                    {/* Footer Info */}
+                    <div className="p-8 bg-amber-50 rounded-[2rem] border border-amber-100 flex gap-4">
+                        <AlertCircle className="text-amber-600 shrink-0" size={20} />
+                        <div>
+                            <p className="text-[11px] font-black text-amber-800 uppercase tracking-widest mb-1">Compliance Notice</p>
+                            <p className="text-xs font-bold text-amber-700 leading-relaxed opacity-80">
+                                This is a simulated environment. All eligibility decisions made here do not affect actual student records or financial aid distribution.
+                            </p>
                         </div>
                     </div>
-                </Card>
-            </div>
-
-            {/* Mock Data Display */}
-            <Card>
-                <h2 className="font-semibold mb-4">Submitted Information (Mock Data)</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 bg-gray-50 rounded">
-                        <p className="text-sm text-gray-500">Household Information</p>
-                        <p className="font-medium mt-1">{mockStudent.householdIncome} annual income</p>
-                    </div>
-                    <div className="p-4 bg-gray-50 rounded">
-                        <p className="text-sm text-gray-500">Program Applications</p>
-                        <p className="font-medium mt-1">{mockStudent.programs.join(', ')}</p>
-                    </div>
-                    <div className="p-4 bg-gray-50 rounded">
-                        <p className="text-sm text-gray-500">Enrollment Date</p>
-                        <p className="font-medium mt-1">{mockStudent.enrollmentDate}</p>
-                    </div>
-                    <div className="p-4 bg-gray-50 rounded">
-                        <p className="text-sm text-gray-500">Date of Birth</p>
-                        <p className="font-medium mt-1">{mockStudent.dob}</p>
-                    </div>
-                </div>
-
-                <div
-                    className="mt-4 p-3 bg-yellow-50 rounded text-sm text-yellow-700"
-                    role="note"
-                    aria-label="Demo note"
-                >
-                    <p className="font-medium mb-1">Note: All data displayed is mock data</p>
-                    <p>No real student information is shown or processed in this demo.</p>
-                </div>
-            </Card>
+                </section>
+            </main>
         </div>
     );
 };
+
+// Helper Component for Sidebar Data
+const InfoField = ({ label, value, isStatus }: { label: string, value: string, isStatus?: boolean }) => (
+    <div>
+        <dt className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{label}</dt>
+        <dd className={`text-sm font-bold tracking-tight ${isStatus ? 'text-blue-600' : 'text-slate-700'}`}>
+            {value}
+        </dd>
+    </div>
+);
+
+// Helper Component for Checklist Items
+const CriteriaItem = ({ label }: { label: string }) => (
+    <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+        <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+            <CheckCircle size={12} strokeWidth={3} />
+        </div>
+        <span className="text-xs font-black text-slate-600 uppercase tracking-widest">{label}</span>
+    </div>
+);

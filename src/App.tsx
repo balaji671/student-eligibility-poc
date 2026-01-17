@@ -30,10 +30,10 @@ function App() {
   React.useEffect(() => {
     AOS.init({
       offset: 200,
-      duration: 600,
+      duration: 800,
       easing: 'ease-in-sine',
       delay: 100,
-      startEvent: 'DOMContentLoaded',
+      once: true
     });
     // In POC, we'll simulate being authenticated after login
     const token = localStorage.getItem('demo_token');

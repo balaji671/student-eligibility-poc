@@ -593,7 +593,7 @@ export const StudentCreate: React.FC = () => {
                     onClick={() => navigate('/students')}
                     className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg shadow-slate-200 transition-all active:scale-95"
                 >
-                    <ArrowLeft size={18} />
+                    <ChevronLeft size={18} />
                     Exit to Roster
                 </button>
             </header>

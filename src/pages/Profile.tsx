@@ -7,16 +7,16 @@ import { Checkbox } from 'primereact/checkbox';
 import { Badge } from 'primereact/badge';
 import {
     User,
-    Mail,
     Shield,
-    Calendar,
     Settings,
     Bell,
     Key,
-    LogOut
+    LogOut,
+    Info,
+    ChevronRight,
+    Lock
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { DemoBanner } from '../components/Common/DemoBanner';
 import { getUserProfile } from '../utils/mockData';
 
 export const Profile: React.FC = () => {
@@ -47,81 +47,80 @@ export const Profile: React.FC = () => {
     };
 
     const sections = [
-        { id: 'profile', label: 'Profile Information', icon: User },
-        { id: 'notifications', label: 'Notifications', icon: Bell },
-        { id: 'security', label: 'Security', icon: Shield },
-        { id: 'preferences', label: 'Preferences', icon: Settings }
+        { id: 'profile', label: 'Profile Information', icon: User, desc: 'Personal details and contact info' },
+        { id: 'notifications', label: 'Notifications', icon: Bell, desc: 'Manage alerts and messages' },
+        { id: 'security', label: 'Security', icon: Shield, desc: 'Password and account safety' },
+        { id: 'preferences', label: 'Preferences', icon: Settings, desc: 'System and display settings' }
     ];
 
     const renderSectionContent = () => {
         switch (activeSection) {
             case 'profile':
                 return (
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                                <User size={32} />
+                            </div>
                             <div>
-                                <label className="block text-sm font-medium mb-2">Full Name</label>
+                                <h2 className="text-xl font-bold text-slate-800">Account Details</h2>
+                                <p className="text-slate-500 text-sm">Update your public profile and contact address</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div className="flex flex-col gap-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Full Name</label>
                                 <InputText
                                     value={profile.name}
                                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                                    className="w-full"
-                                    aria-label="User full name"
+                                    className="p-3 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Email Address</label>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email Address</label>
                                 <InputText
                                     value={profile.email}
                                     onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                                    className="w-full"
+                                    className="p-3 border-slate-200 rounded-xl"
                                     type="email"
-                                    aria-label="User email address"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">Role</label>
-                                <InputText
-                                    value={profile.role}
-                                    className="w-full"
-                                    disabled
-                                    aria-label="User role"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-2">LEA Number</label>
-                                <InputText
-                                    value={profile.leaNumber}
-                                    className="w-full"
-                                    disabled
-                                    aria-label="LEA number"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="p-4 bg-blue-50 rounded">
-                            <h4 className="font-medium text-blue-800 mb-2">System Information</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <p className="text-sm text-blue-700">User ID</p>
-                                    <p className="font-medium">{profile.id}</p>
+                            <div className="flex flex-col gap-2 opacity-75">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Role</label>
+                                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 flex items-center gap-2">
+                                    <Shield size={14} /> {profile.role}
                                 </div>
-                                <div>
-                                    <p className="text-sm text-blue-700">Last Login</p>
-                                    <p className="font-medium">{profile.lastLogin}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-blue-700">Login Count</p>
-                                    <p className="font-medium">{profile.loginCount}</p>
+                            </div>
+                            <div className="flex flex-col gap-2 opacity-75">
+                                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">LEA Number</label>
+                                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-600">
+                                    {profile.leaNumber}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex justify-end">
+                        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 flex flex-wrap gap-8">
+                            <div>
+                                <p className="text-[10px] font-black uppercase text-slate-400 mb-1">Internal ID</p>
+                                <p className="font-mono text-sm text-slate-700">{profile.id}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black uppercase text-slate-400 mb-1">Last Session</p>
+                                <p className="text-sm text-slate-700">{profile.lastLogin}</p>
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black uppercase text-slate-400 mb-1">Activity Count</p>
+                                <p className="text-sm text-slate-700">{profile.loginCount} Logins</p>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end mt-8 pt-6 border-t border-slate-100">
                             <Button
-                                label="Save Changes"
-                                icon="pi pi-save"
+                                label="Update Profile"
+                                icon="pi pi-check-circle"
                                 onClick={handleSaveProfile}
-                                aria-label="Save profile changes"
+                                className="bg-slate-900 border-none px-6 py-3 rounded-xl hover:bg-black transition-all shadow-lg shadow-slate-200"
                             />
                         </div>
                     </div>
@@ -129,110 +128,84 @@ export const Profile: React.FC = () => {
 
             case 'notifications':
                 return (
-                    <div className="space-y-6">
-                        <h3 className="text-lg font-semibold">Notification Preferences</h3>
-                        <p className="text-gray-600 mb-6">Configure how you receive system notifications</p>
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <div className="mb-8">
+                            <h2 className="text-xl font-bold text-slate-800">Notification Settings</h2>
+                            <p className="text-slate-500 text-sm">Choose how and when you want to be alerted</p>
+                        </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             {Object.entries(notifications).map(([key, value]) => (
-                                <div key={key} className="flex items-center justify-between p-4 border rounded hover:bg-gray-50">
-                                    <div>
-                                        <p className="font-medium">
-                                            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                            {key === 'emailAlerts' && 'Receive email alerts for important updates'}
-                                            {key === 'duplicateNotifications' && 'Get notified about potential duplicates'}
-                                            {key === 'eligibilityUpdates' && 'Notifications for eligibility status changes'}
-                                            {key === 'systemMaintenance' && 'Alerts about system maintenance'}
-                                            {key === 'weeklyReports' && 'Weekly summary reports'}
-                                        </p>
+                                <div key={key} className="flex items-center justify-between p-5 bg-white border border-slate-100 rounded-2xl hover:border-blue-200 hover:shadow-sm transition-all group">
+                                    <div className="flex gap-4 items-center">
+                                        <div className={`p-2 rounded-lg ${value ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-400'}`}>
+                                            <Bell size={20} />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-slate-700 group-hover:text-blue-700 transition-colors">
+                                                {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                                            </p>
+                                            <p className="text-xs text-slate-500">
+                                                {key === 'emailAlerts' && 'Receive email alerts for important system updates'}
+                                                {key === 'duplicateNotifications' && 'Get notified about potential record duplicates'}
+                                                {key === 'eligibilityUpdates' && 'Notifications for student eligibility status changes'}
+                                                {key === 'systemMaintenance' && 'Critical alerts about upcoming maintenance'}
+                                                {key === 'weeklyReports' && 'Automated weekly performance summary reports'}
+                                            </p>
+                                        </div>
                                     </div>
                                     <Checkbox
                                         checked={value}
                                         onChange={() => handleNotificationToggle(key as keyof typeof notifications)}
-                                        aria-label={`Toggle ${key} notifications`}
+                                        className="scale-110"
                                     />
                                 </div>
                             ))}
-                        </div>
-
-                        <div className="p-4 bg-yellow-50 rounded">
-                            <h4 className="font-medium text-yellow-800 mb-2">Demo Notice</h4>
-                            <p className="text-yellow-700 text-sm">
-                                Notification settings are simulated. In production, these would control actual email and system notifications.
-                            </p>
                         </div>
                     </div>
                 );
 
             case 'security':
                 return (
-                    <div className="space-y-6">
-                        <h3 className="text-lg font-semibold">Security Settings</h3>
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <div className="mb-8">
+                            <h2 className="text-xl font-bold text-slate-800">Security & Privacy</h2>
+                            <p className="text-slate-500 text-sm">Manage your password and account security</p>
+                        </div>
 
-                        <div className="space-y-4">
-                            <div className="p-4 border rounded">
-                                <h4 className="font-medium mb-3 flex items-center">
-                                    <Key className="h-5 w-5 mr-2" />
-                                    Change Password
-                                </h4>
-                                <div className="space-y-3">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Current Password</label>
-                                        <InputText type="password" className="w-full" placeholder="••••••••" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">New Password</label>
-                                        <InputText type="password" className="w-full" placeholder="••••••••" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Confirm New Password</label>
-                                        <InputText type="password" className="w-full" placeholder="••••••••" />
-                                    </div>
+                        <div className="grid gap-6">
+                            <div className="p-6 bg-slate-50/50 border border-slate-100 rounded-3xl">
+                                <div className="flex items-center gap-2 mb-6 font-bold text-slate-800">
+                                    <Key size={18} className="text-blue-600" /> Change Password
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <InputText type="password" placeholder="Current Password" className="p-3 rounded-xl border-slate-200 shadow-sm" />
+                                    <InputText type="password" placeholder="New Password" className="p-3 rounded-xl border-slate-200 shadow-sm" />
+                                    <InputText type="password" placeholder="Confirm New" className="p-3 rounded-xl border-slate-200 shadow-sm" />
                                 </div>
                                 <Button
                                     label="Update Password"
-                                    icon="pi pi-key"
-                                    className="mt-4"
                                     onClick={handlePasswordChange}
-                                    aria-label="Update password"
+                                    className="mt-6! p-button-sm bg-blue-600! border-none! rounded-xl! px-6!"
                                 />
                             </div>
 
-                            <div className="p-4 border rounded">
-                                <h4 className="font-medium mb-3">Two-Factor Authentication</h4>
-                                <p className="text-gray-600 text-sm mb-4">
-                                    Add an extra layer of security to your account
-                                </p>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm">Status: <Badge value="Not Enabled" severity="warning" /></span>
-                                    <Button
-                                        label="Enable 2FA"
-                                        icon="pi pi-shield"
-                                        className="p-button-outlined p-button-sm"
-                                        onClick={() => toast.info('2FA setup would open in production')}
-                                        aria-label="Enable two-factor authentication"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="p-4 border rounded">
-                                <h4 className="font-medium mb-3">Login History</h4>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm">
-                                        <span>Current Session</span>
-                                        <span className="text-green-600">Active</span>
+                            <div className="flex items-center justify-between p-6 bg-white border border-slate-100 rounded-3xl">
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl">
+                                        <Lock size={24} />
                                     </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span>Last Login</span>
-                                        <span>{profile.lastLogin}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span>Total Logins</span>
-                                        <span>{profile.loginCount}</span>
+                                    <div>
+                                        <p className="font-bold text-slate-800">Two-Factor Authentication</p>
+                                        <p className="text-sm text-slate-500">Adds an extra layer of security to your account.</p>
+                                        <div className="mt-2"><Badge value="Recommended" severity="warning" className="text-[10px]" /></div>
                                     </div>
                                 </div>
+                                <Button
+                                    label="Enable 2FA"
+                                    className="p-button-outlined p-button-secondary rounded-xl"
+                                    onClick={() => toast.info('2FA setup would open in production')}
+                                />
                             </div>
                         </div>
                     </div>
@@ -240,94 +213,49 @@ export const Profile: React.FC = () => {
 
             case 'preferences':
                 return (
-                    <div className="space-y-6">
-                        <h3 className="text-lg font-semibold">System Preferences</h3>
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <div className="mb-8">
+                            <h2 className="text-xl font-bold text-slate-800">System Preferences</h2>
+                            <p className="text-slate-500 text-sm">Customize your dashboard and interaction style</p>
+                        </div>
 
-                        <div className="space-y-4">
-                            <div className="p-4 border rounded">
-                                <h4 className="font-medium mb-3">Display Preferences</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="p-6 border border-slate-100 rounded-3xl space-y-4">
+                                <h4 className="font-bold text-slate-800 flex items-center gap-2"><Settings size={16} /> Display</h4>
+                                <div>
+                                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Dashboard View</label>
+                                    <Dropdown
+                                        options={[{ label: 'Summary View', value: 'summary' }, { label: 'Detailed', value: 'detailed' }]}
+                                        placeholder="Select View"
+                                        className="w-full rounded-xl border-slate-200"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Pagination</label>
+                                    <Dropdown
+                                        options={[{ label: '25 per page', value: '25' }, { label: '50 per page', value: '50' }]}
+                                        placeholder="Select Limit"
+                                        className="w-full rounded-xl border-slate-200"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="p-6 border border-slate-100 rounded-3xl space-y-4">
+                                <h4 className="font-bold text-slate-800 flex items-center gap-2"><Info size={16} /> Accessibility</h4>
                                 <div className="space-y-3">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">Default Dashboard View</label>
-                                        <Dropdown
-                                            options={[
-                                                { label: 'Summary View', value: 'summary' },
-                                                { label: 'Detailed View', value: 'detailed' },
-                                                { label: 'Custom View', value: 'custom' }
-                                            ]}
-                                            placeholder="Select default view"
-                                            className="w-full"
-                                            aria-label="Select default dashboard view"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">Results Per Page</label>
-                                        <Dropdown
-                                            options={[
-                                                { label: '10 results', value: '10' },
-                                                { label: '25 results', value: '25' },
-                                                { label: '50 results', value: '50' },
-                                                { label: '100 results', value: '100' }
-                                            ]}
-                                            placeholder="Select page size"
-                                            className="w-full"
-                                            aria-label="Select results per page"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="p-4 border rounded">
-                                <h4 className="font-medium mb-3">Export Settings</h4>
-                                <div className="space-y-2">
-                                    <div className="flex items-center">
-                                        <Checkbox checked={true} />
-                                        <label className="ml-2 text-sm">Include headers in CSV exports</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <Checkbox checked={true} />
-                                        <label className="ml-2 text-sm">Compress exported files</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <Checkbox checked={false} />
-                                        <label className="ml-2 text-sm">Send export confirmation emails</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="p-4 border rounded">
-                                <h4 className="font-medium mb-3">Accessibility Settings</h4>
-                                <div className="space-y-2">
-                                    <div className="flex items-center">
-                                        <Checkbox checked={true} />
-                                        <label className="ml-2 text-sm">High contrast mode</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <Checkbox checked={false} />
-                                        <label className="ml-2 text-sm">Reduce motion animations</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <Checkbox checked={true} />
-                                        <label className="ml-2 text-sm">Large text mode</label>
-                                    </div>
+                                    {['High contrast mode', 'Large text mode', 'Reduced motion'].map((pref, i) => (
+                                        <div key={i} className="flex items-center gap-3 py-1">
+                                            <Checkbox checked={i !== 2} />
+                                            <span className="text-sm text-slate-700">{pref}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex justify-end space-x-3">
-                            <Button
-                                label="Reset to Defaults"
-                                icon="pi pi-refresh"
-                                className="p-button-outlined"
-                                onClick={() => toast.info('Preferences reset (Demo)')}
-                                aria-label="Reset preferences to defaults"
-                            />
-                            <Button
-                                label="Save Preferences"
-                                icon="pi pi-save"
-                                onClick={() => toast.success('Preferences saved (Demo)')}
-                                aria-label="Save preferences"
-                            />
+                        <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-slate-100">
+                            <Button label="Reset Defaults" className="p-button-text p-button-secondary rounded-xl text-slate-500" />
+                            <Button label="Save Preferences" className="bg-blue-600 border-none px-8 rounded-xl shadow-lg shadow-blue-100" />
                         </div>
                     </div>
                 );
@@ -338,79 +266,129 @@ export const Profile: React.FC = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <DemoBanner />
-
-            <header>
-                <h1 className="text-2xl font-bold text-gray-900">User Profile & Settings</h1>
-                <p className="text-gray-600">Manage your account preferences and settings</p>
+        <div className="">
+            <header className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Account Settings</h1>
+                    <p className="text-slate-500 font-medium mt-1">Manage your identity and environment</p>
+                </div>
+                <div className="hidden md:block">
+                    <Badge value="Production Account" severity="info" className="p-2 rounded-lg px-3" />
+                </div>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Sidebar Navigation */}
-                <Card className="lg:col-span-1">
-                    <div className="space-y-2">
-                        {sections.map((section) => (
+            {/* Change: flex-col for mobile, lg:flex-row for desktop */}
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+
+                {/* Responsive Navigation Area */}
+                <aside className="lg:w-80 flex flex-col gap-6">
+                    {/* Mobile: Horizontal scrollable tabs | Desktop: Vertical list */}
+                    <div className="bg-white/50 backdrop-blur-sm border border-slate-100 rounded-3xl md:rounded-[2.5rem] p-2 md:p-4 shadow-xl shadow-slate-200/50 overflow-hidden">
+                        <nav className="flex lg:flex-col overflow-x-auto no-scrollbar gap-1">
+                            {sections.map((section) => {
+                                const isActive = activeSection === section.id;
+                                return (
+                                    <button
+                                        key={section.id}
+                                        onClick={() => setActiveSection(section.id)}
+                                        className={`flex-shrink-0 lg:w-full group flex items-center gap-3 lg:justify-between p-3 md:p-4 rounded-2xl transition-all duration-300 ${isActive
+                                            ? 'bg-slate-900 text-white shadow-lg lg:-translate-y-1'
+                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-3 md:gap-4">
+                                            <div className={`p-2 rounded-xl transition-colors ${isActive ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-500 group-hover:bg-white group-hover:text-blue-600'}`}>
+                                                <section.icon size={18} className="md:w-5 md:h-5" />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-xs md:text-sm font-bold whitespace-nowrap">{section.label}</p>
+                                                {/* Hide description on mobile to save space */}
+                                                <p className={`hidden lg:block text-[10px] ${isActive ? 'text-slate-400' : 'text-slate-400'}`}>
+                                                    {section.desc}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {/* Show chevron only on desktop */}
+                                        <ChevronRight size={16} className={`hidden lg:block transition-transform duration-300 ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`} />
+                                    </button>
+                                );
+                            })}
+                        </nav>
+
+                        {/* Logout button: Hidden on mobile nav, or moved to end of list */}
+                        <div className="hidden lg:block mt-6 pt-6 border-t border-slate-100 px-2 pb-2">
                             <button
-                                key={section.id}
-                                onClick={() => setActiveSection(section.id)}
-                                className={`w-full flex items-center p-3 rounded-lg text-left transition-colors ${activeSection === section.id
-                                        ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-600'
-                                        : 'text-gray-700 hover:bg-gray-100'
-                                    }`}
-                                aria-current={activeSection === section.id ? 'page' : undefined}
-                                aria-label={`Navigate to ${section.label}`}
+                                onClick={() => {
+                                    localStorage.removeItem('demo_token');
+                                    window.location.href = '/login';
+                                }}
+                                className="w-fit flex items-center gap-4 p-4 text-rose-500 font-bold hover:bg-rose-50 rounded-2xl transition-colors group"
                             >
-                                <section.icon className="h-5 w-5 mr-3" />
-                                <span className="font-medium">{section.label}</span>
+                                <div className="p-2 bg-rose-50 text-rose-500 rounded-xl group-hover:bg-rose-100">
+                                    <LogOut size={20} />
+                                </div>
+                                <span className="text-sm w-fit">Sign Out</span>
                             </button>
-                        ))}
+                        </div>
                     </div>
 
-                    <div className="mt-8 pt-6 border-t">
-                        <div className="p-4 bg-gray-50 rounded">
-                            <h4 className="font-medium mb-2">Account Information</h4>
-                            <div className="space-y-1 text-sm">
-                                <p className="text-gray-600">Role: <span className="font-medium">{profile.role}</span></p>
-                                <p className="text-gray-600">LEA: <span className="font-medium">{profile.leaNumber}</span></p>
-                                <p className="text-gray-600">County: <span className="font-medium">{profile.county}</span></p>
+                    {/* Workspace Card: Hidden on very small screens, or shown below content */}
+                    <div className="hidden lg:block bg-gradient-to-br from-slate-800 to-black rounded-[2rem] p-6 text-white shadow-2xl relative overflow-hidden">
+                        <div className="relative z-10">
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Current Workspace</p>
+                            <div className="space-y-3">
+                                <div>
+                                    <p className="text-[10px] text-slate-500 uppercase">Organization</p>
+                                    <p className="font-bold text-sm">LEA #{profile.leaNumber}</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-slate-500 uppercase">Region</p>
+                                    <p className="font-bold text-sm">{profile.county} County</p>
+                                </div>
                             </div>
                         </div>
+                        <div className="absolute -bottom-6 -right-6 text-white/5 rotate-12">
+                            <Shield size={120} />
+                        </div>
+                    </div>
+                </aside>
 
-                        <Button
-                            label="Logout"
-                            icon="pi pi-sign-out"
-                            className="w-full mt-4 p-button-outlined p-button-danger"
+                {/* Main Content Area */}
+                <main className="flex-1">
+                    <div className="bg-white border border-slate-100 rounded-3xl md:rounded-[2.5rem] p-5 md:p-7 shadow-2xl shadow-slate-200/40 relative min-h-[500px]">
+                        {renderSectionContent()}
+                    </div>
+
+                    {/* Logout button for Mobile only (shown at bottom) */}
+                    <div className="lg:hidden mt-6">
+                        <button
                             onClick={() => {
                                 localStorage.removeItem('demo_token');
                                 window.location.href = '/login';
                             }}
-                            aria-label="Logout from system"
-                        />
+                            className="w-full mx-auto flex items-center justify-center gap-4 p-4 text-rose-500 font-bold hover:bg-rose-50 rounded-2xl transition-colors group"
+                        >
+                            <div className="p-2 bg-rose-50 text-rose-500 rounded-xl group-hover:bg-rose-100">
+                                <LogOut size={20} />
+                            </div>
+                            <span className="text-sm w-fit">Sign Out</span>
+                        </button>
                     </div>
-                </Card>
 
-                {/* Main Content */}
-                <Card className="lg:col-span-3">
-                    {renderSectionContent()}
-                </Card>
+                    {/* Modern Help Banner */}
+                    <div className="mt-8 md:mt-10 bg-blue-600 rounded-3xl md:rounded-[2rem] p-6 md:p-8 text-white flex flex-col md:flex-row items-center gap-4 md:gap-6 shadow-xl shadow-blue-200">
+                        <div className="h-12 w-12 md:h-14 md:w-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0">
+                            <Info size={24} className="md:w-7 md:h-7" />
+                        </div>
+                        <div className="text-center md:text-left">
+                            <h3 className="text-base md:text-lg font-bold">Safe Environment Mode</h3>
+                            <p className="text-blue-100 text-xs md:text-sm opacity-90 leading-relaxed">
+                                You are in a simulation environment. Profile changes are isolated to this session.
+                            </p>
+                        </div>
+                    </div>
+                </main>
             </div>
-
-            {/* Demo Information */}
-            <Card className="bg-blue-50 border-blue-200">
-                <div className="flex items-start">
-                    <div className="flex-shrink-0">
-                        <Shield className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div className="ml-4">
-                        <h3 className="font-medium text-blue-800">Profile Settings Demo</h3>
-                        <p className="text-sm text-blue-700 mt-1">
-                            This profile page demonstrates user settings management. All changes are simulated and
-                            won't persist between sessions. In production, these settings would be saved to your user profile.
-                        </p>
-                    </div>
-                </div>
-            </Card>
         </div>
     );
 };
