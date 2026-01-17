@@ -1,5 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux'; // New
+import { PersistGate } from 'redux-persist/integration/react'; // New
+import { store, persistor } from './store/store'; // New
 import { Toaster } from 'sonner';
 import { PrimeReactProvider } from 'primereact/api';
 import AOS from 'aos';
@@ -10,6 +13,8 @@ import 'primeicons/primeicons.css';
 import './App.css';
 
 import { AppRoutes } from './routes';
+import { useAppSelector, useAppDispatch } from './hooks/reduxHooks';
+import { logout } from './store/slice/authSlice';
 
 // 508 Compliance announcement element
 const ScreenReaderAnnouncement = () => (
@@ -23,10 +28,10 @@ const ScreenReaderAnnouncement = () => (
   </div>
 );
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+function AppContent() {
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
-  // Mock authentication check
   React.useEffect(() => {
     AOS.init({
       offset: 200,
@@ -35,41 +40,35 @@ function App() {
       delay: 100,
       once: true
     });
-    // In POC, we'll simulate being authenticated after login
-    const token = localStorage.getItem('demo_token');
-    setIsAuthenticated(!!token);
   }, []);
 
-  const handleLogin = () => {
-    localStorage.setItem('demo_token', 'demo_token_value');
-    setIsAuthenticated(true);
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem('demo_token');
-    setIsAuthenticated(false);
+    dispatch(logout());
   };
 
   return (
-    <PrimeReactProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <ScreenReaderAnnouncement />
-          <Toaster
-            position="top-right"
-            richColors
-            closeButton
-            aria-live="assertive"
-          />
+    <div className="min-h-screen bg-gray-50">
+      <AppRoutes
+        isAuthenticated={isAuthenticated}
+        onLogout={handleLogout}
+      />
+    </div>
+  );
+}
 
-          <AppRoutes
-            isAuthenticated={isAuthenticated}
-            onLogin={handleLogin}
-            onLogout={handleLogout}
-          />
-        </div>
-      </Router>
-    </PrimeReactProvider>
+function App() {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <PrimeReactProvider>
+          <Router>
+            <ScreenReaderAnnouncement />
+            <Toaster position="top-right" richColors closeButton />
+            <AppContent />
+          </Router>
+        </PrimeReactProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

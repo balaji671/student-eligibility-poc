@@ -1,49 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, Loader2 } from 'lucide-react'; // Added Loader2 for a smoother spin
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'; // New
+import { loginUser } from '../store/slice/authSlice'; // New
+import { Lock, Mail } from 'lucide-react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
-import { toast } from 'sonner';
-import { DemoBanner } from '../components/Common/DemoBanner';
 
-interface LoginProps {
-  onLogin: () => void;
-}
+interface LoginProps { }
 
-export const Login: React.FC<LoginProps> = ({ onLogin }) => {
+export const Login: React.FC<LoginProps> = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { loading: isLoading } = useAppSelector((state) => state.auth);
+  
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    setTimeout(() => {
-      if (email && password) {
-        onLogin();
-        toast.success('Login successful! Welcome to the demo.');
-        navigate('/dashboard');
-      } else {
-        toast.error('Please enter email and password');
-      }
-      setIsLoading(false);
-    }, 500);
+    if (email && password) {
+      // Trigger Redux Thunk
+      dispatch(loginUser({
+        credentials: { email, password },
+        navigate
+      }));
+    }
   };
 
   const handleDemoLogin = () => {
-    setEmail('demo@lea.org');
-    setPassword('demopassword');
-    setIsLoading(true);
-
-    setTimeout(() => {
-      onLogin();
-      toast.success('Demo login successful! Welcome to the POC.');
-      navigate('/dashboard');
-      setIsLoading(false);
-    }, 500);
+    const credentials = { email: 'demo@lea.org', password: 'demopassword' };
+    dispatch(loginUser({
+      credentials,
+      navigate
+    }));
   };
 
   return (

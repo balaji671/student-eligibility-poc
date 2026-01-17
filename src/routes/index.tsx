@@ -11,10 +11,10 @@ import { EligibilityReview } from '../pages/EligibilityReview';
 import { Reports } from '../pages/Reports';
 import { Profile } from '../pages/Profile';
 import PrivateLayout from '../components/Layout/Layout';
+import { useAppSelector } from '../hooks/reduxHooks';
 
 interface AppRoutesProps {
     isAuthenticated: boolean;
-    onLogin: () => void;
     onLogout: () => void;
 }
 
@@ -25,20 +25,12 @@ const PublicRoute: React.FC<{
     return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
-export const AppRoutes: React.FC<AppRoutesProps> = ({
-    isAuthenticated,
-    onLogin,
-    onLogout
-}) => {
+export const AppRoutes: React.FC<AppRoutesProps> = ({ onLogout }) => {
+    const { isAuthenticated } = useAppSelector((state) => state.auth);
     return (
         <Routes>
-            {/* Public Route */}
-            <Route
-                path="/login"
-                element={<PublicRoute isAuthenticated={isAuthenticated}><Login onLogin={onLogin} /></PublicRoute>}
-            />
+            <Route path="/login" element={<PublicRoute isAuthenticated={isAuthenticated}><Login /></PublicRoute>} />
 
-            {/* Protected Routes */}
             {isAuthenticated ? (
                 <Route element={<PrivateLayout onLogout={onLogout} />}>
                     <Route path="/dashboard" element={<Dashboard />} />

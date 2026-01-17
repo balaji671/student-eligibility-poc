@@ -1,26 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Outlet, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import bannerImage from "../../assets/images/banner.jpg";
-import { LayoutDashboard, Users, Calendar, BarChart3, Settings, LogOut, Menu, X, Bell, Search, User, CircleUserRound, FilesIcon, UserIcon, UserPlus, Upload, ClipboardCheck } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
+import { LayoutDashboard, Users, BarChart3, Settings, LogOut, Menu, X, Bell, Search, User, UserIcon, UserPlus, Upload, ClipboardCheck } from 'lucide-react';
+import { useAppSelector, useAppDispatch } from '../../hooks/reduxHooks';
+import { logout } from '../../store/slice/authSlice';
 import { Avatar } from "primereact/avatar";
 import { Dialog } from 'primereact/dialog';
-import { ImageUpload, MyScheduleIcon, SessionHistory } from '../Common/SvgIcons';
+import { ImageUpload } from '../Common/SvgIcons';
 
 const POLL_INTERVAL = 30000;
 
 const NotificationCount = () => {
-    const unreadNotificationsCount = useSelector((state: any) => state?.notification?.unreadNotificationsCount || 0);
-    const dispatch = useDispatch();
-    const { user } = useSelector((state: any) => state?.auth || {});
+    // Corrected to use typed selector
+    // const unreadNotificationsCount = useAppSelector((state) => state?.notification?.unreadNotificationsCount || 0);
+    const unreadNotificationsCount = 0;
+    const { user } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
-        if (!user?.userId) return;
+        if (!user?.id) return; // Use 'id' as per your Redux User interface
         const interval = setInterval(() => {
-            console.log("Notification fetch");
+            console.log("Notification fetch for user:", user.id);
         }, POLL_INTERVAL);
         return () => clearInterval(interval);
-    }, [user?.userId, dispatch]);
+    }, [user?.id]);
 
     return (
         <>
@@ -39,19 +41,16 @@ interface PrivateLayoutProps {
 
 const PrivateLayout: React.FC<PrivateLayoutProps> = ({ onLogout }) => {
     const location = useLocation();
-    // const dispatch = useDispatch();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     // Auth State Mapping
-    const { isAuthenticated, roleType, firstName, lastName, projectType } = useSelector((state: any) => state?.auth?.user || {
-        isAuthenticated: true, // Mocked for demo
-        roleType: 'admin',
-        firstName: 'John',
-        lastName: 'Doe'
-    });
+    const { isAuthenticated, user } = useAppSelector((state) => state.auth);
 
-    const endUserKey = useSelector((state: any) => state?.userManagement?.endUserKey || 'user').toLowerCase();
-    const normalizedRole = roleType?.toLowerCase() || '';
+    // Derived values from Redux user object
+    const firstName = user?.firstName || 'User';
+    const lastName = user?.lastName || '';
+    const normalizedRole = user?.role?.toLowerCase() || '';
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -72,19 +71,13 @@ const PrivateLayout: React.FC<PrivateLayoutProps> = ({ onLogout }) => {
     const isActive = (href: string) => location.pathname === href;
 
     const handleLogout = useCallback(() => {
-        if (onLogout) {
-            onLogout();
-        }
+        dispatch(logout()); // Trigger Redux Logout
+        if (onLogout) onLogout();
         setVisible(false);
         navigate('/login');
-    }, [navigate]);
-
-    const handleNavigate = useCallback(() => {
-        navigate('/notifications');
-    }, [navigate]);
-
+    }, [navigate, dispatch, onLogout]);
     if (!isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
 
     const profileDropdownItems = [
@@ -119,29 +112,29 @@ const PrivateLayout: React.FC<PrivateLayoutProps> = ({ onLogout }) => {
                                     className="bg-transparent text-white placeholder-white/70 outline-none text-sm w-48"
                                 />
                             </div>
-                            <button onClick={handleNavigate} className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors cursor-pointer relative">
+                            <button onClick={() => navigate('/notifications')} className="text-white hover:bg-white/20 p-2 rounded-lg relative">
                                 <Bell size={20} />
                                 <NotificationCount />
                             </button>
                             <button
-                                className={`text-white hover:bg-white/20 ${isProfileDropdownOpen ? "bg-white/20" : ""} p-2 rounded-lg  cursor-pointer`}
+                                className={`text-white hover:bg-white/20 ${isProfileDropdownOpen ? "bg-white/20" : ""} p-2 rounded-lg`}
                                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                             >
                                 <User size={20} />
                             </button>
 
                             {isProfileDropdownOpen && (
-                                <div className='absolute right-4 top-14 w-40 rounded-md overflow-hidden z-50 bg-white shadow-md p-2'>
-                                    {profileDropdownItems?.map(item => {
-                                        const Icon = item?.icon;
-                                        return <button
-                                            key={item?.name}
-                                            onClick={item?.onClick}
-                                            className={"flex gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900  cursor-pointer"}>
-                                            <Icon width={24} size={20} />
-                                            {item?.name}
+                                <div className='absolute right-4 top-14 w-48 rounded-xl overflow-hidden z-50 bg-white shadow-xl p-2 border border-slate-100'>
+                                    {profileDropdownItems.map(item => (
+                                        <button
+                                            key={item.name}
+                                            onClick={item.onClick}
+                                            className="flex gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors"
+                                        >
+                                            <item.icon size={18} />
+                                            {item.name}
                                         </button>
-                                    })}
+                                    ))}
                                 </div>
                             )}
 
@@ -167,35 +160,37 @@ const PrivateLayout: React.FC<PrivateLayoutProps> = ({ onLogout }) => {
                             <X size={20} />
                         </button>
 
-                        <div className="flex flex-col items-center space-y-3 pb-4 border-b border-gray-200 w-full">
-                            <Avatar style={{ width: '8rem', height: '8rem' }} shape="circle"
-                                icon={<UserIcon size={40} />} />
-                            <div className='max-w-full'>
-                                <p className="text-xs text-gray-500 text-center">Welcome back</p>
-                                <p className="font-semibold text-gray-900 text-lg text-center capitalize truncate">{`${firstName} ${lastName}`}</p>
+                        <div className="flex flex-col items-center space-y-4 pb-6 border-b border-slate-100">
+                            <Avatar size="xlarge" shape="circle" icon={<UserIcon size={32} />} className="bg-slate-100 text-slate-400" />
+                            <div className='text-center'>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Authorized User</p>
+                                <p className="font-bold text-slate-900 text-base capitalize">{`${user?.firstName} ${user?.lastName}`}</p>
+                                <p className="text-[10px] text-blue-600 font-bold px-2 py-0.5 bg-blue-50 rounded-full inline-block mt-1">
+                                    {`${user?.role?.charAt(0)}${user?.role?.slice(1)}`}
+                                </p>
                             </div>
                         </div>
 
-                        <nav className="flex-1 py-6 space-y-2 mx-auto overflow-y-scroll">
-                            {navigationItems?.map((item) => {
-                                const Icon = item?.icon;
-                                return item?.isShow && (
+                        <nav className="flex-1 py-6 space-y-1 overflow-y-auto no-scrollbar">
+                            {navigationItems.map((item) => (
+                                item.isShow && (
                                     <Link
-                                        key={item?.name}
-                                        to={item?.href}
+                                        key={item.name}
+                                        to={item.href}
                                         onClick={() => setSidebarOpen(false)}
-                                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(item?.href)
-                                            ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
-                                        <Icon width={24} size={20} color={isActive(item?.href) ? '#1447e6' : '#4a5565'} />
-                                        {item?.name}
+                                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${isActive(item.href)
+                                            ? 'bg-slate-900 text-white shadow-lg shadow-slate-200'
+                                            : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}
+                                    >
+                                        <item.icon size={18} />
+                                        {item.name}
                                     </Link>
-                                );
-                            })}
+                                )
+                            ))}
                         </nav>
 
-                        <div className="pt-4 border-t border-gray-200">
-                            <button onClick={() => setVisible(true)} className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 w-full transition-colors">
+                        <div className="pt-4">
+                            <button onClick={() => setVisible(true)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-rose-500 hover:bg-rose-50 w-full transition-colors">
                                 <LogOut size={18} />
                                 Logout
                             </button>
